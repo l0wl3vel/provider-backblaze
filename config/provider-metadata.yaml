@@ -1,9 +1,24 @@
-name: hashicorp/null
+name: Backblaze/b2
 resources:
-    null_resource Resource - terraform-provider-null:
+    b2_application_key Resource - terraform-provider-b2:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource Resource - terraform-provider-null
-        title: null_resource Resource - terraform-provider-null
+        description: B2 application key resource.
+        name: b2_application_key Resource - terraform-provider-b2
+        title: b2_application_key Resource - terraform-provider-b2
+        argumentDocs: {}
+        importStatements: []
+    b2_bucket Resource - terraform-provider-b2:
+        subCategory: ""
+        description: B2 bucket resource.
+        name: b2_bucket Resource - terraform-provider-b2
+        title: b2_bucket Resource - terraform-provider-b2
+        argumentDocs:
+            "false": .
+        importStatements: []
+    b2_bucket_file_version Resource - terraform-provider-b2:
+        subCategory: ""
+        description: B2 bucket file version resource.
+        name: b2_bucket_file_version Resource - terraform-provider-b2
+        title: b2_bucket_file_version Resource - terraform-provider-b2
         argumentDocs: {}
         importStatements: []

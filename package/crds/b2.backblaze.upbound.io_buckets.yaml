@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: resources.null.template.upbound.io
+  name: buckets.b2.backblaze.upbound.io
 spec:
-  group: null.template.upbound.io
+  group: b2.backblaze.upbound.io
   names:
     categories:
     - crossplane
     - managed
-    - template
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    - backblaze
+    kind: Bucket
+    listKind: BucketList
+    plural: buckets
+    singular: bucket
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. <no value>
+        description: Bucket is the Schema for the Buckets API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: BucketSpec defines the desired state of Bucket
             properties:
               deletionPolicy:
                 default: Delete
@@ -67,13 +67,133 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
+                  bucketInfo:
                     additionalProperties:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
+                    description: User-defined information to be stored with the bucket.
                     type: object
+                  bucketName:
+                    description: The name of the bucket.
+                    type: string
+                  bucketType:
+                    description: The bucket type. Either 'allPublic', meaning that
+                      files in this bucket can be downloaded by anybody, or 'allPrivate'.
+                    type: string
+                  corsRules:
+                    description: The initial list of CORS rules for this bucket.
+                    items:
+                      properties:
+                        allowedHeaders:
+                          description: If present, this is a list of headers that
+                            are allowed in a pre-flight OPTIONS's request's Access-Control-Request-Headers
+                            header value.
+                          items:
+                            type: string
+                          type: array
+                        allowedOperations:
+                          description: A list specifying which operations the rule
+                            allows.
+                          items:
+                            type: string
+                          type: array
+                        allowedOrigins:
+                          description: A non-empty list specifying which origins the
+                            rule covers.
+                          items:
+                            type: string
+                          type: array
+                        corsRuleName:
+                          description: A name for humans to recognize the rule in
+                            a user interface.
+                          type: string
+                        exposeHeaders:
+                          description: If present, this is a list of headers that
+                            may be exposed to an application inside the client.
+                          items:
+                            type: string
+                          type: array
+                        maxAgeSeconds:
+                          description: This specifies the maximum number of seconds
+                            that a browser may cache the response to a preflight request.
+                          type: number
+                      required:
+                      - allowedOperations
+                      - allowedOrigins
+                      - corsRuleName
+                      - maxAgeSeconds
+                      type: object
+                    type: array
+                  defaultServerSideEncryption:
+                    description: The default server-side encryption settings for this
+                      bucket.
+                    items:
+                      properties:
+                        algorithm:
+                          description: Server-side encryption algorithm. AES256 is
+                            the only one supported.
+                          type: string
+                        mode:
+                          description: Server-side encryption mode.
+                          type: string
+                      type: object
+                    type: array
+                  fileLockConfiguration:
+                    description: File lock enabled flag, and default retention settings.
+                    items:
+                      properties:
+                        defaultRetention:
+                          description: Default retention settings for files uploaded
+                            to this bucket
+                          items:
+                            properties:
+                              mode:
+                                description: Default retention mode (compliance|governance|none).
+                                type: string
+                              period:
+                                description: How long for to make files immutable
+                                items:
+                                  properties:
+                                    duration:
+                                      description: Duration
+                                      type: number
+                                    unit:
+                                      description: Unit for duration (days|years)
+                                      type: string
+                                  required:
+                                  - duration
+                                  - unit
+                                  type: object
+                                type: array
+                            required:
+                            - mode
+                            type: object
+                          type: array
+                        isFileLockEnabled:
+                          description: If present, the boolean value specifies whether
+                            bucket is File Lock-enabled. Defaults to `false`.
+                          type: boolean
+                      type: object
+                    type: array
+                  lifecycleRules:
+                    description: The initial list of lifecycle rules for this bucket.
+                    items:
+                      properties:
+                        daysFromHidingToDeleting:
+                          description: It says how long to keep file versions that
+                            are not the current version.
+                          type: number
+                        daysFromUploadingToHiding:
+                          description: It causes files to be hidden automatically
+                            after the given number of days.
+                          type: number
+                        fileNamePrefix:
+                          description: It specifies which files in the bucket it applies
+                            to.
+                          type: string
+                      required:
+                      - fileNamePrefix
+                      type: object
+                    type: array
                 type: object
               managementPolicy:
                 default: FullControl
@@ -261,20 +381,147 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: bucketName is a required parameter
+              rule: self.managementPolicy == 'ObserveOnly' || has(self.forProvider.bucketName)
+            - message: bucketType is a required parameter
+              rule: self.managementPolicy == 'ObserveOnly' || has(self.forProvider.bucketType)
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: BucketStatus defines the observed state of Bucket.
             properties:
               atProvider:
                 properties:
-                  id:
+                  accountId:
+                    description: Account ID that the bucket belongs to.
                     type: string
-                  triggers:
+                  bucketId:
+                    description: The ID of the bucket.
+                    type: string
+                  bucketInfo:
                     additionalProperties:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
+                    description: User-defined information to be stored with the bucket.
                     type: object
+                  bucketName:
+                    description: The name of the bucket.
+                    type: string
+                  bucketType:
+                    description: The bucket type. Either 'allPublic', meaning that
+                      files in this bucket can be downloaded by anybody, or 'allPrivate'.
+                    type: string
+                  corsRules:
+                    description: The initial list of CORS rules for this bucket.
+                    items:
+                      properties:
+                        allowedHeaders:
+                          description: If present, this is a list of headers that
+                            are allowed in a pre-flight OPTIONS's request's Access-Control-Request-Headers
+                            header value.
+                          items:
+                            type: string
+                          type: array
+                        allowedOperations:
+                          description: A list specifying which operations the rule
+                            allows.
+                          items:
+                            type: string
+                          type: array
+                        allowedOrigins:
+                          description: A non-empty list specifying which origins the
+                            rule covers.
+                          items:
+                            type: string
+                          type: array
+                        corsRuleName:
+                          description: A name for humans to recognize the rule in
+                            a user interface.
+                          type: string
+                        exposeHeaders:
+                          description: If present, this is a list of headers that
+                            may be exposed to an application inside the client.
+                          items:
+                            type: string
+                          type: array
+                        maxAgeSeconds:
+                          description: This specifies the maximum number of seconds
+                            that a browser may cache the response to a preflight request.
+                          type: number
+                      type: object
+                    type: array
+                  defaultServerSideEncryption:
+                    description: The default server-side encryption settings for this
+                      bucket.
+                    items:
+                      properties:
+                        algorithm:
+                          description: Server-side encryption algorithm. AES256 is
+                            the only one supported.
+                          type: string
+                        mode:
+                          description: Server-side encryption mode.
+                          type: string
+                      type: object
+                    type: array
+                  fileLockConfiguration:
+                    description: File lock enabled flag, and default retention settings.
+                    items:
+                      properties:
+                        defaultRetention:
+                          description: Default retention settings for files uploaded
+                            to this bucket
+                          items:
+                            properties:
+                              mode:
+                                description: Default retention mode (compliance|governance|none).
+                                type: string
+                              period:
+                                description: How long for to make files immutable
+                                items:
+                                  properties:
+                                    duration:
+                                      description: Duration
+                                      type: number
+                                    unit:
+                                      description: Unit for duration (days|years)
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        isFileLockEnabled:
+                          description: If present, the boolean value specifies whether
+                            bucket is File Lock-enabled. Defaults to `false`.
+                          type: boolean
+                      type: object
+                    type: array
+                  id:
+                    type: string
+                  lifecycleRules:
+                    description: The initial list of lifecycle rules for this bucket.
+                    items:
+                      properties:
+                        daysFromHidingToDeleting:
+                          description: It says how long to keep file versions that
+                            are not the current version.
+                          type: number
+                        daysFromUploadingToHiding:
+                          description: It causes files to be hidden automatically
+                            after the given number of days.
+                          type: number
+                        fileNamePrefix:
+                          description: It specifies which files in the bucket it applies
+                            to.
+                          type: string
+                      type: object
+                    type: array
+                  options:
+                    description: List of bucket options.
+                    items:
+                      type: string
+                    type: array
+                  revision:
+                    description: Bucket revision.
+                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -1,4 +1,4 @@
-module github.com/upbound/upjet-provider-template
+module github.com/l0wl3vel/provider-backblaze
 
 go 1.19
 
