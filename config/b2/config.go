@@ -1,6 +1,7 @@
 package b2
 
 import "github.com/upbound/upjet/pkg/config"
+import xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 
 // Configure configures individual resources by adding custom ResourceConfigurators.
 func Configure(p *config.Provider) {
@@ -13,5 +14,13 @@ func Configure(p *config.Provider) {
         // We need to override the default group that upjet generated for
         // this resource, which would be "github"
         r.ShortGroup = "b2"
+
+        
+		r.Sensitive.AdditionalConnectionDetailsFn = func(attr map[string]interface{}) (map[string][]byte, error) {
+			return map[string][]byte{
+				xpv1.ResourceCredentialsSecretUserKey:     []byte(attr["application_key_id"].(string)),
+				xpv1.ResourceCredentialsSecretPasswordKey: []byte(attr["application_key"].(string)),
+			}, nil
+		}
     })
 }

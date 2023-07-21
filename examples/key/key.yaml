@@ -11,3 +11,6 @@ spec:
       - "readFiles"
       - "writeFiles"
       - "listBuckets"
+  writeConnectionSecretToRef:
+    name: testkey
+    namespace: default
