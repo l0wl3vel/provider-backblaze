@@ -64,7 +64,7 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 
 		// Set credentials in Terraform provider configuration.
 		ps.Configuration = map[string]any{
-			"application_key": creds["application_key"],
+			"application_key":    creds["application_key"],
 			"application_key_id": creds["application_key_id"],
 		}
 		return ps, nil

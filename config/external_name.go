@@ -10,7 +10,7 @@ import "github.com/upbound/upjet/pkg/config"
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
 	// Import requires using a randomly generated ID from provider: nl-2e21sda
-	"b2_bucket": config.IdentifierFromProvider,
+	"b2_bucket":          config.IdentifierFromProvider,
 	"b2_application_key": config.IdentifierFromProvider,
 }
 
