@@ -1,0 +1,13 @@
+apiVersion: b2.backblaze.upbound.io/v1alpha1
+kind: Key
+metadata:
+  name: testkey
+spec:
+  forProvider:
+    keyName: testkey
+    bucketId: 971b495249a37fa4869d0a18
+    capabilities: # Available Capabilities can be found here: https://www.backblaze.com/docs/cloud-storage-application-keys
+      - "listFiles"
+      - "readFiles"
+      - "writeFiles"
+      - "listBuckets"

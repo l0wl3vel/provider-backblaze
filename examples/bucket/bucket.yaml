@@ -1,0 +1,14 @@
+apiVersion: b2.backblaze.upbound.io/v1alpha1
+kind: Bucket
+metadata:
+  name: testbucket
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    bucketName: e040c699-1d21-47b8-94ae-739d67382458 # Change this. Bucket Names need to be globally unique
+    bucketType: allPrivate
+    lifecycleRules:
+      - fileNamePrefix: "test"
+        daysFromHidingToDeleting: 30
+        daysFromUploadingToHiding: 30
+  managementPolicy: FullControl
