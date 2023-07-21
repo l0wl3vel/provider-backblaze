@@ -39,8 +39,17 @@ type KeyObservation struct {
 type KeyParameters struct {
 
 	// When present, restricts access to one bucket.
+	// +crossplane:generate:reference:type=Bucket
 	// +kubebuilder:validation:Optional
 	BucketID *string `json:"bucketId,omitempty" tf:"bucket_id,omitempty"`
+
+	// Reference to a Bucket to populate bucketId.
+	// +kubebuilder:validation:Optional
+	BucketIDRef *v1.Reference `json:"bucketIdRef,omitempty" tf:"-"`
+
+	// Selector for a Bucket to populate bucketId.
+	// +kubebuilder:validation:Optional
+	BucketIDSelector *v1.Selector `json:"bucketIdSelector,omitempty" tf:"-"`
 
 	// A set of strings, each one naming a capability the key has.
 	// +kubebuilder:validation:Optional

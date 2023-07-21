@@ -5,7 +5,8 @@ metadata:
 spec:
   forProvider:
     keyName: testkey
-    bucketId: 971b495249a37fa4869d0a18
+    bucketIdRef:
+      name: testbucket
     capabilities: # Available Capabilities can be found here: https://www.backblaze.com/docs/cloud-storage-application-keys
       - "listFiles"
       - "readFiles"

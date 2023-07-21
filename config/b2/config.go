@@ -15,7 +15,10 @@ func Configure(p *config.Provider) {
         // this resource, which would be "github"
         r.ShortGroup = "b2"
 
-        
+        r.References["bucket_id"] = config.Reference{
+            Type: "Bucket",
+        }
+
 		r.Sensitive.AdditionalConnectionDetailsFn = func(attr map[string]interface{}) (map[string][]byte, error) {
 			return map[string][]byte{
 				xpv1.ResourceCredentialsSecretUserKey:     []byte(attr["application_key_id"].(string)),
