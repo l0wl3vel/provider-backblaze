@@ -10,8 +10,8 @@ export TERRAFORM_PROVIDER_SOURCE ?= Backblaze/b2
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/Backblaze/terraform-provider-b2
 export TERRAFORM_PROVIDER_VERSION ?= 0.8.4
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-b2
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://releases.hashicorp.com/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-github_v0.8.4_x5
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/Backblaze/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-b2_$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_DOCS_PATH ?= docs/resources
 
 
